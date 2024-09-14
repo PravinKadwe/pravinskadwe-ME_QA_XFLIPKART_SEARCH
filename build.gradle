@@ -19,10 +19,14 @@ repositories {
 
 dependencies {
 
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+
     testImplementation 'org.testng:testng:6.9.10'
 
     // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
     implementation 'org.seleniumhq.selenium:selenium-java:4.21.0'
+
+    testImplementation 'io.github.bonigarcia:webdrivermanager:5.1.0'
 
 }
 
@@ -59,18 +63,33 @@ test {
 
 mainClassName = 'demo.App'
 
+// checkstyle {
+//     toolVersion = '8.45' // Check for the latest version compatible with your setup
+//     config = rootProject.resources.text.fromFile('__CRIO__/checkstyle.xml')
+//     sourceSets = [sourceSets.test]
+//     ignoreFailures = true
+// }
+
 checkstyle {
-    toolVersion = '8.45' // Check for the latest version compatible with your setup
-    config = rootProject.resources.text.fromFile('__CRIO__/checkstyle.xml')
-    sourceSets = [sourceSets.test]
-    ignoreFailures = true
+    toolVersion = '8.45' // Keep this as per your setup
+    config = rootProject.resources.text.fromFile('__CRIO__/checkstyle.xml') // Check if this path is correct
+    sourceSets = [sourceSets.main, sourceSets.test] // Include both main and test source sets
+    ignoreFailures = false // Set to false to ensure build fails on Checkstyle violations
 }
+
+task startScript(type:Exec) {
+   commandLine './selenium-run.sh'
+}
+
+run.dependsOn startScript
+
+test.dependsOn startScript
 
 tasks.withType(Checkstyle) {
     reports {
-            xml.required = true
-            html.required = false
-        }
+        xml.required = true
+        html.required = true
+    }
 }
 
 test {

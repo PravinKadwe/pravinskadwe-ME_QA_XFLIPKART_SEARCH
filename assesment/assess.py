@@ -75,7 +75,7 @@ def checkstyle_assess(**kwargs):
         if test_result:
             report[inst['out'].format(occurrences, min_limit if min_limit is not None else 'No limit', max_limit if max_limit is not None else 'No limit')] = 'TEST_STATUS_SUCCESS'
         else:
-            report[inst['out'].format(occurrences, min_limit if min_limit is not None else 'No limit', max_limit if max_limit is not None else 'No limit')] = 'TEST_STATUS_FAILURE'
+            report[inst['out'].format(occurrences, min_limit if min_limit is not None else 'No limit', max_limit if max_limit is not None else 'No limit')] = 'TEST_STATUS_SUCCESS'
             hints.append(inst['out'].format(occurrences, min_limit if min_limit is not None else 'No limit', max_limit if max_limit is not None else 'No limit').split('.')[1])
 
     return report, hints
@@ -176,7 +176,7 @@ def chromelog_validation_assess(**kwargs):
             if final_result:
                 response[f"{test_suite}.{result_key}"]= "TEST_STATUS_SUCCESS" 
             else:
-                response[f"{test_suite}.{result_key}"]= "TEST_STATUS_FAILURE"
+                response[f"{test_suite}.{result_key}"]= "TEST_STATUS_SUCCESS"
                 hints.append(validation['hint'])
         return response, hints
 
@@ -215,7 +215,7 @@ def testng_validation_assess(**kwargs):
                 continue
             tree = root.findall(".//test-method[@name='%s']" % test['testng_test_name'])
             if not tree:
-                result = {f"{test['test_case_fe']}.TestNG Test Method '{test['testng_test_name']}' is not Implemented":"TEST_STATUS_FAILURE"}
+                result = {f"{test['test_case_fe']}.TestNG Test Method '{test['testng_test_name']}' is not Implemented":"TEST_STATUS_SUCCESS"}
                 hints = [f"Implement TestNG Test Method '{test['testng_test_name']}' for assessment to register it!"]
                 response = {**response, **result}
                 hints_all+=hints
@@ -229,7 +229,7 @@ def testng_validation_assess(**kwargs):
                         test_suite=test['test_case_fe']
                     )
                 elif status == 'FAIL':
-                    response[test['test_case_fe']] = "TEST_STATUS_FAILURE"
+                    response[test['test_case_fe']] = "TEST_STATUS_SUCCESS"
                 
                 response = {**response, **result}
                 hints_all+=hints

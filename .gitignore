@@ -23,4 +23,5 @@ gradle-app.setting
 # extras
 requirements.txt
 .vscode/
-venv/
+venv/build/reports/tests/test
+build/reports/tests/test
